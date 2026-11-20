@@ -3,130 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moje Osobní Stránka</title>
+    <title>Můj denní plánovač ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f4f4f9;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
-            --subtext-color: #6b7280;
-            --btn-bg: #4f46e5;
-            --btn-hover: #4338ca;
-            --btn-text: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f9e8ee 50%, #f3e7fa 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --primary: #e879a0;
+            --primary-hover: #d65f89;
+            --secondary: #f8d7e3;
+            --text: #4a3f46;
+            --text-light: #8e7d87;
+            --border: #f3dce5;
         }
 
-        body.dark-mode {
-            --bg-color: #111827;
-            --card-bg: #1f2937;
-            --text-color: #f9fafb;
-            --subtext-color: #9ca3af;
-            --btn-bg: #6366f1;
-            --btn-hover: #4f46e5;
+        * {
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: var(--bg-gradient);
+            color: var(--text);
             min-height: 100vh;
             margin: 0;
-            transition: background-color 0.3s, color 0.3s;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         .card {
-            background-color: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ffffff;
+            border-radius: 24px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(232, 121, 160, 0.12);
+        }
+
+        header {
             text-align: center;
-            max-width: 380px;
-            width: 90%;
-            position: relative;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            border: 3px solid var(--btn-bg);
         }
 
         h1 {
-            margin: 0.5rem 0 0.2rem;
-            font-size: 1.5rem;
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
         }
 
-        p {
-            color: var(--subtext-color);
+        .date-display {
+            color: var(--text-light);
             font-size: 0.95rem;
-            margin-bottom: 1.8rem;
-            line-height: 1.5;
+            margin-top: 0.3rem;
+            font-weight: 600;
         }
 
-        .links {
+        h2 {
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Input pro úkoly */
+        .input-group {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+        }
+
+        input[type="text"], select {
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 0.95rem;
+            color: var(--text);
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"] {
+            flex: 1;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        button.add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 0 1.2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button.add-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        /* Seznam úkolů */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        li {
+            background: #fff;
+            padding: 0.8rem 1rem;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        li.completed {
+            opacity: 0.6;
+            background: #fdf6f9;
+        }
+
+        li.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
             gap: 0.8rem;
+            cursor: pointer;
+            flex: 1;
         }
 
-        .btn {
-            display: block;
-            background-color: var(--btn-bg);
-            color: var(--btn-text);
-            text-decoration: none;
-            padding: 0.9rem;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: transform 0.2s, background-color 0.2s;
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            flex-shrink: 0;
         }
 
-        .btn:hover {
-            background-color: var(--btn-hover);
-            transform: translateY(-2px);
+        li.completed .checkbox {
+            background: var(--primary);
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            background: var(--secondary);
+            color: var(--primary-hover);
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #d1b8c4;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .delete-btn:hover {
+            color: #e11d48;
+        }
+
+        /* Pitný režim */
+        .water-cups {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .cup {
+            font-size: 1.6rem;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: transform 0.2s, opacity 0.2s;
+            user-select: none;
+        }
+
+        .cup.filled {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Poznámky */
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            resize: vertical;
+            font-size: 0.95rem;
+            color: var(--text);
+            outline: none;
+            background: #fff;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            padding: 1rem 0;
         }
     </style>
 </head>
 <body>
 
+<div class="container">
+    <!-- Hlavička -->
     <div class="card">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Přepnout režim">🌓</button>
-        
-        <!-- Zde můžeš změnit odkaz na vlastní fotku -->
-        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profilová fotka" class="avatar">
-        
-        <!-- Změň si jméno a popisek -->
-        <h1>Tvoje Jméno</h1>
-        <p>Tvůrce, nadšenec do technologií a milovník dobré kávy. Vítej na mém webu!</p>
-
-        <!-- Tlačítka s odkazy -->
-        <div class="links">
-            <a href="https://instagram.com" target="_blank" class="btn">📸 Instagram</a>
-            <a href="https://github.com" target="_blank" class="btn">💻 Můj GitHub</a>
-            <a href="https://youtube.com" target="_blank" class="btn">🎬 YouTube kanál</a>
-            <a href="mailto:tvuj@email.cz" class="btn">✉️ Napiš mi e-mail</a>
-        </div>
+        <header>
+            <h1>✨ Můj krásný den ✨</h1>
+            <div class="date-display" id="currentDate"></div>
+        </header>
     </div>
 
-    <script>
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
+    <!-- To-Do List -->
+    <div class="card">
+        <h2>🌸 Úkoly na dnes</h2>
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Co je potřeba udělat..." onkeypress="handleKeyPress(event)">
+            <select id="tagSelect">
+                <option value="Osobní">💅 Osobní</option>
+                <option value="Škola/Práce">📚 Škola/Práce</option>
+                <option value="Nákup">🛍️ Nákup</option>
+            </select>
+            <button class="add-btn" onclick="addTask()">+</button>
+        </div>
+        <ul id="taskList"></ul>
+        <div id="emptyMsg" class="empty-msg">Zatím žádné úkoly. Užij si volno! 🌷</div>
+    </div>
+
+    <!-- Pitný režim -->
+    <div class="card">
+        <h2>💧 Pitný režim (8 sklenic)</h2>
+        <div class="water-cups" id="waterCups"></div>
+    </div>
+
+    <!-- Rychlé poznámky -->
+    <div class="card">
+        <h2>💌 Poznámky a myšlenky</h2>
+        <textarea id="notesArea" placeholder="Sem si napiš cokoliv, na co nechceš zapomenout..." oninput="saveNotes()"></textarea>
+    </div>
+</div>
+
+<script>
+    // Zobrazení aktuálního data
+    const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+    const today = new Date().toLocaleDateString('cs-CZ', dateOptions);
+    document.getElementById('currentDate').textContent = today.charAt(0).toUpperCase() + today.slice(1);
+
+    // Načtení dat z paměti prohlížeče
+    let tasks = JSON.parse(localStorage.getItem('girlyTasks')) || [];
+    let waterCount = parseInt(localStorage.getItem('girlyWater')) || 0;
+    document.getElementById('notesArea').value = localStorage.getItem('girlyNotes') || '';
+
+    // Vykreslení úkolů
+    function renderTasks() {
+        const list = document.getElementById('taskList');
+        const emptyMsg = document.getElementById('emptyMsg');
+        list.innerHTML = '';
+
+        if (tasks.length === 0) {
+            emptyMsg.style.display = 'block';
+        } else {
+            emptyMsg.style.display = 'none';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                if (task.completed) li.classList.add('completed');
+
+                li.innerHTML = `
+                    <div class="task-left" onclick="toggleTask(${index})">
+                        <div class="checkbox">${task.completed ? '✓' : ''}</div>
+                        <span class="task-text">${task.text}</span>
+                        <span class="tag">${task.tag}</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteTask(${index})" title="Smazat">✕</button>
+                `;
+                list.appendChild(li);
+            });
         }
-    </script>
+        localStorage.setItem('girlyTasks', JSON.stringify(tasks));
+    }
+
+    function addTask() {
+        const input = document.getElementById('taskInput');
+        const tag = document.getElementById('tagSelect').value;
+        const text = input.value.trim();
+
+        if (text !== '') {
+            tasks.push({ text: text, tag: tag, completed: false });
+            input.value = '';
+            renderTasks();
+        }
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') addTask();
+    }
+
+    function toggleTask(index) {
+        tasks[index].completed = !tasks[index].completed;
+        renderTasks();
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        renderTasks();
+    }
+
+    // Pitný režim (8 skleniček)
+    function renderWater() {
+        const container = document.getElementById('waterCups');
+        container.innerHTML = '';
+        for (let i = 1; i <= 8; i++) {
+            const cup = document.createElement('span');
+            cup.className = 'cup' + (i <= waterCount ? ' filled' : '');
+            cup.textContent = '🥤';
+            cup.onclick = () => {
+                waterCount = (waterCount === i) ? i - 1 : i;
+                localStorage.setItem('girlyWater', waterCount);
+                renderWater();
+            };
+            container.appendChild(cup);
+        }
+    }
+
+    // Ukládání poznámek
+    function saveNotes() {
+        const text = document.getElementById('notesArea').value;
+        localStorage.setItem('girlyNotes', text);
+    }
+
+    // Spuštění při načtení stránky
+    renderTasks();
+    renderWater();
+</script>
 
 </body>
 </html>
